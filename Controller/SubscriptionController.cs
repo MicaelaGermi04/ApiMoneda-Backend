@@ -21,7 +21,7 @@ namespace ApiMoneda.Controller
             return Ok(_subscriptionService.GetAll());
         }
 
-        [HttpGet("{susbcriptionId}")]
+        [HttpGet("{subscriptionId}")]
         public IActionResult GetById(int subscriptionId)
         {
             Subscription subscription = _subscriptionService.GetSubscriptionById(subscriptionId);
@@ -32,7 +32,7 @@ namespace ApiMoneda.Controller
             return Ok(subscription);
         }
 
-        [HttpGet("{subscriptionId}/amountOfConversions")]
+        [HttpGet("{subscriptionId}/AmountOfConversions")]
         public IActionResult GetSubscriptionAmountOfConversions(int subscriptionId)
         {
             int amountOfConversions = _subscriptionService.GetSubscriptionAmountOfConversions(subscriptionId);

@@ -60,7 +60,7 @@ namespace ApiMoneda.Data
             {
                 Id = 1,   
                 Name = "Peso argentino",
-                Symbol = "$",
+                ISOcode = "ARS",
                 Value = 0.0012m,
 
             };
@@ -68,7 +68,7 @@ namespace ApiMoneda.Data
             {
                 Id = 2,
                 Name = "Dolar estadounidense",
-                Symbol = "$",
+                ISOcode = "USD",
                 Value = 1,
 
             };
@@ -76,7 +76,7 @@ namespace ApiMoneda.Data
             {
                 Id = 3,
                 Name = "Euro",
-                Symbol = "€",
+                ISOcode = "EUR",
                 Value = 1.11m,
 
             };
@@ -84,7 +84,7 @@ namespace ApiMoneda.Data
             {
                 Id = 4,
                 Name = "Libra esterlina",
-                Symbol = "£",
+                ISOcode = "GBP",
                 Value = 1.28m,
 
             };
@@ -92,7 +92,7 @@ namespace ApiMoneda.Data
             {
                 Id = 5,
                 Name = "Yen",
-                Symbol = "¥",
+                ISOcode = "JPY",
                 Value = 0.0071m,
 
             };
@@ -100,7 +100,7 @@ namespace ApiMoneda.Data
             {
                 Id = 6,
                 Name = "Dolar canadiense",
-                Symbol = "$",
+                ISOcode = "CAD",
                 Value = 0.76m,
 
             };
@@ -108,7 +108,7 @@ namespace ApiMoneda.Data
             {
                 Id = 7,
                 Name = "Dolar australiano",
-                Symbol = "CHF",
+                ISOcode = "AUD",
                 Value = 0.69m,
 
             };
@@ -116,7 +116,7 @@ namespace ApiMoneda.Data
             {
                 Id = 8,
                 Name = "Franco suizo",
-                Symbol = "$",
+                ISOcode = "CHF",
                 Value = 1.19m,
 
             };
@@ -124,7 +124,7 @@ namespace ApiMoneda.Data
             {
                 Id = 9,
                 Name = "Yuan chino",
-                Symbol = "¥",
+                ISOcode = "CNY",
                 Value = 0.14m,
 
             };
@@ -132,7 +132,7 @@ namespace ApiMoneda.Data
             {
                 Id = 10,
                 Name = "Peso mexicano",
-                Symbol = "$",
+                ISOcode = "$",
                 Value = 0.059m,
 
             };
@@ -141,7 +141,7 @@ namespace ApiMoneda.Data
             {
                 Id = 11,
                 Name = "Peso uruguayo",
-                Symbol = "$",
+                ISOcode = "UYI",
                 Value = 0.026m,
 
             };
@@ -149,7 +149,7 @@ namespace ApiMoneda.Data
             {
                 Id = 12,
                 Name = "Peso chileno",
-                Symbol = "$",
+                ISOcode = "CLP",
                 Value = 0.0011m,
 
             };
@@ -157,7 +157,7 @@ namespace ApiMoneda.Data
             {
                 Id = 13,
                 Name = "Real",
-                Symbol = "R$",
+                ISOcode = "BRL",
                 Value = 0.21m,
 
             };

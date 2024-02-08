@@ -59,7 +59,8 @@ public class UserController : ControllerBase
         return Created("Created", dto);
     }
     [HttpPut("{userId}")]
-    public IActionResult UpdateUser(UpdateUserDto dto, int userId) 
+    [AllowAnonymous]
+    public IActionResult UpdateUser([FromBody] UpdateUserDto dto, int userId) 
     {
         if(!_userService.CheckIfUserExists(userId))
         {
@@ -71,7 +72,7 @@ public class UserController : ControllerBase
         }
         catch (Exception ex)
         {
-            return BadRequest(ex);
+            return BadRequest(ex.Message);
         }
         return NoContent();
     }

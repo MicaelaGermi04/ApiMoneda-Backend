@@ -12,7 +12,7 @@ namespace ApiMoneda.Entities
         [StringLength(50)]
         [Required]
         public string Name { get; set; }
-        public string Symbol { get; set; }
+        public string ISOcode { get; set; }
         [Required]
         public decimal Value { get; set; }
     }

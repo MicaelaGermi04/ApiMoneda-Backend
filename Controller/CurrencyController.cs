@@ -3,6 +3,7 @@ using ApiMoneda.Models.Dto;
 using ApiMoneda.Models.Dto.CurrencyDTO;
 using ApiMoneda.Models.Enum;
 using ApiMoneda.Service.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -10,6 +11,7 @@ namespace ApiMoneda.Controller
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CurrencyController : ControllerBase
     {
         private readonly ICurrencyService _currencyService; 
@@ -19,6 +21,7 @@ namespace ApiMoneda.Controller
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult GetAll() 
         {
             return Ok(_currencyService.GetAll());
@@ -61,7 +64,7 @@ namespace ApiMoneda.Controller
             {
                 Id = currency.Id,
                 Name = currency.Name,
-                Symbol = currency.Symbol,
+                isOcode = currency.ISOcode,
                 Value = currency.Value,
             };
             return Ok(currencydto);
@@ -90,7 +93,7 @@ namespace ApiMoneda.Controller
             return Forbid(); // No autorizado
         }
 
-        [HttpDelete]
+        [HttpDelete("{currencyId}")] 
         public IActionResult DeleteCurrency(int currencyId)
         {
             string role = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
@@ -108,46 +111,5 @@ namespace ApiMoneda.Controller
             return Forbid();
         }
 
-        [HttpPost("favourite/{currencyId}")]
-        public IActionResult AddFavoriteCurrency(int currencyId)
-        {
-            int userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
-            if(! _currencyService.CheckIfCurrencyExists(currencyId)) 
-            { 
-                return NotFound();
-            }
-            _currencyService.AddFavouriteCurrency(currencyId, userId);
-            return Created("Created", currencyId);
-        }
-
-        [HttpDelete("favourite/{currencyId}")]
-        public IActionResult DeleteFavouriteCurrency(int currencyId)
-        {
-            int userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
-            if(!_currencyService.CheckIfCurrencyExists(currencyId))
-            {
-                return NotFound();
-            }
-            _currencyService.DeleteFavouriteCurrency(currencyId, userId);
-            return NoContent();
-        }
-
-        [HttpGet("favourite")]
-        public IActionResult GetFavouriteCurrencies()
-        {
-            try
-            {
-                int userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
-                if (userId != null)
-                {
-                    return Ok(_currencyService.GetFavouriteCurrencies(userId));
-                }
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
-            }
-            return BadRequest(); // Creo que seria por UserId null
-        }
     }
 }

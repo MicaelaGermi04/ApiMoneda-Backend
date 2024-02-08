@@ -18,6 +18,11 @@ namespace ApiMoneda.Service.Implementations
         {
             return _context.Currencies.SingleOrDefault(c => c.Id == Id);
         }
+
+        public Currency? GetByName(string name) 
+        {
+            return _context.Currencies.SingleOrDefault(c=> c.Name == name);
+        }
         public List<Currency> GetAll()
         {
             return _context.Currencies.ToList();
@@ -27,7 +32,7 @@ namespace ApiMoneda.Service.Implementations
             Currency currency = new Currency()
             {
                 Name = dto.Name,
-                Symbol = dto.Symbol,
+                ISOcode = dto.isOcode,
                 Value = dto.Value,
             };
             _context.Currencies.Add(currency);
@@ -37,7 +42,7 @@ namespace ApiMoneda.Service.Implementations
         {
             Currency currencyToUpdate = _context.Currencies.SingleOrDefault(c =>c.Id == id);
             currencyToUpdate.Name = dto.Name;
-            currencyToUpdate.Symbol = dto.Symbol;
+            currencyToUpdate.ISOcode = dto.isOcode;
             currencyToUpdate.Value = dto.Value;
 
             _context.SaveChanges();
@@ -75,7 +80,7 @@ namespace ApiMoneda.Service.Implementations
             {
                 Id = c.Id,
                 Name = c.Name,
-                Symbol = c.Symbol,
+                ISOcode = c.ISOcode,
                 Value = c.Value,
             }).ToList();
         }

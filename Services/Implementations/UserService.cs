@@ -61,10 +61,9 @@ namespace ApiMoneda.Service.Implementations
         public void Update(UpdateUserDto dto, int userId)
         {
             User userToUpdate = _context.Users.First(u => u.Id == userId);
-            userToUpdate.FirstName = dto.FistName;
+            userToUpdate.FirstName = dto.FirstName;
             userToUpdate.LastName = dto.LastName;
             userToUpdate.UserName = dto.UserName;
-            userToUpdate.Password = dto.Password;
             userToUpdate.SubscriptionId = dto.SubscriptionId;
             _context.SaveChanges();
         }
@@ -78,14 +77,14 @@ namespace ApiMoneda.Service.Implementations
 
         public bool CheckIfUserExists(int UserId)
         {
-            User? user = _context.Users.FirstOrDefault(user => user.Id == UserId);
+            User? user = _context.Users.SingleOrDefault(user => user.Id == UserId);
             return user != null;
         }
 
         // Puede ser que este mal
         public void UpdateUserSubscription( int userId, int subscriptionId)
         {
-            User userToUpdate = _context.Users.FirstOrDefault(u => u.Id == userId);
+            User userToUpdate = _context.Users.SingleOrDefault(u => u.Id == userId);
             if (userToUpdate != null)
             {
                 userToUpdate.SubscriptionId = subscriptionId;

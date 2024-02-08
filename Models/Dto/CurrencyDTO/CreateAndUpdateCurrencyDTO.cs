@@ -9,7 +9,7 @@ namespace ApiMoneda.Models.Dto
         public string Name { get; set; }
         [Required]
 
-        public string Symbol { get; set; }
+        public string isOcode { get; set; }
         [Required]
 
         public decimal Value { get; set; }
