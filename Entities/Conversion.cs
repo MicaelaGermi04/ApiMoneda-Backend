@@ -16,7 +16,7 @@ namespace ApiMoneda.Entities
 
         public string FirstCurrencyName { get; set; }
         public string SecondCurrencyName { get; set; }
-        public decimal FristCurrencyAmount { get; set; }
+        public decimal FirstCurrencyAmount { get; set; }
         public decimal ConvertedAmount { get; set; }
     }
 }

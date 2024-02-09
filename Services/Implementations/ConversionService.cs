@@ -24,7 +24,7 @@ namespace ApiMoneda.Services.Implementations
                 Date = DateTime.Now,
                 UserId = dto.UserId,
                 FirstCurrencyName = dto.FirstCurrencyName,
-                FristCurrencyAmount = dto.FirstCurrencyAmount,
+                FirstCurrencyAmount = dto.FirstCurrencyAmount,
                 SecondCurrencyName = dto.SecondCurrencyName,
                 ConvertedAmount = dto.ConvertedAmount,
             };
