@@ -36,5 +36,14 @@ namespace ApiMoneda.Service.Implementations
             }
             return 0;
         }
+        public bool CheckIfUserExists(int subscriptionId)
+        {
+            Subscription? subscription = _context.Subscriptions.SingleOrDefault(s => s.Id == subscriptionId);
+            if (subscription == null)
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }

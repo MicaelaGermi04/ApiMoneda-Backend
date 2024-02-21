@@ -49,64 +49,17 @@ namespace ApiMoneda.Service.Implementations
         }
         public void DeleteCurrency(int id)
         {
-            var CurrencyToDelete = _context.Currencies.Single(c => c.Id == id);
-            if (CurrencyToDelete is not null)
-            {
-                _context.Currencies.Remove(CurrencyToDelete);
-            }
+            _context.Currencies.Remove(_context.Currencies.Single(u => u.Id == id));
             _context.SaveChanges();
         }
         public bool CheckIfCurrencyExists(int id)
         {
             Currency? currency = _context.Currencies.FirstOrDefault(c => c.Id == id);
-            return currency != null;
-        }
-
-        public List<Currency> GetFavouriteCurrencies(int userId)
-        {
-            // Obtiene el usuario con el id especificado e incluye las monedas favoritas
-            User user = _context.Users
-                .Include(u => u.Currencies)
-                .FirstOrDefault(u => u.Id == userId);
-
-            // Si el usuario no existe o no tiene monedas favoritas, devuelve una lista vacía
-            if (user == null || user.Currencies == null)
+            if (currency == null)
             {
-                return new List<Currency>();
+                return false;
             }
-
-            // Devuelve las monedas favoritas del usuario, seleccionando solo las propiedades de Currency
-            return user.Currencies.Select(c=> new Currency
-            {
-                Id = c.Id,
-                Name = c.Name,
-                ISOcode = c.ISOcode,
-                Value = c.Value,
-            }).ToList();
-        }
-        
-        public void AddFavouriteCurrency(int currencyId, int userId)
-        {
-            var user = _context.Users.Include( u => u.Currencies).FirstOrDefault(u => u.Id == userId);
-            var currency = _context.Currencies.FirstOrDefault(c=> c.Id == currencyId);
-
-            if( user != null && currency != null )
-            {
-                user.Currencies.Add(currency);
-                _context.SaveChanges();
-            }
-        }
-        public void DeleteFavouriteCurrency(int currencyId, int userId)
-        {
-            var user = _context.Users.Include(u => u.Currencies).FirstOrDefault(u => u.Id == userId);
-            var currency = _context.Currencies.FirstOrDefault(c => c.Id == currencyId);
-
-            if( user != null && currency != null )
-            {
-                user.Currencies.Remove(currency);
-                _context.SaveChanges();
-            }
-
+            return true;
         }
 
     }

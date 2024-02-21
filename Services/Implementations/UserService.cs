@@ -10,7 +10,7 @@ using ApiMoneda.Models.Dto.UserDTO;
 
 namespace ApiMoneda.Service.Implementations
 {
-    public class UserService : IUserService
+    public class UserService : IUserService 
     {
         private readonly ConversorContext _context;
         public UserService(ConversorContext context)
@@ -43,27 +43,19 @@ namespace ApiMoneda.Service.Implementations
                 Password = dto.Password,
                 UserName = dto.UserName,
                 Role = Role.User,
-
-
-
             };
             _context.Users.Add(User);
             _context.SaveChanges();
         }
 
-        //El update funciona de la siguiente manera:
-        /*
-         * Primero traemos la entidad de la base de datos.
-         * Cuando traemos la entidad entity framework trackea las propiedades del objeto
-         * Cuando modificamos algo el estado de la entidad pasa a "Modified"
-         * Una vez hacemos _context.SaveChanges() esto va a ver que la entidad fue modificada y guarda los cambios en la base de datos.
-         */
         public void Update(UpdateUserDto dto, int userId)
         {
-            User userToUpdate = _context.Users.First(u => u.Id == userId);
+            User userToUpdate = _context.Users.Single(u => u.Id == userId); 
             userToUpdate.FirstName = dto.FirstName;
             userToUpdate.LastName = dto.LastName;
             userToUpdate.UserName = dto.UserName;
+            userToUpdate.Email = dto.Email;
+            userToUpdate.Password = dto.Password;
             userToUpdate.SubscriptionId = dto.SubscriptionId;
             _context.SaveChanges();
         }
@@ -77,11 +69,15 @@ namespace ApiMoneda.Service.Implementations
 
         public bool CheckIfUserExists(int UserId)
         {
-            User? user = _context.Users.SingleOrDefault(user => user.Id == UserId);
-            return user != null;
+            User? user = _context.Users.SingleOrDefault(user => user.Id == UserId); 
+            if(user == null)
+            {
+             return false;
+            }
+            return true;
         }
 
-        // Puede ser que este mal
+
         public void UpdateUserSubscription( int userId, int subscriptionId)
         {
             User userToUpdate = _context.Users.SingleOrDefault(u => u.Id == userId);

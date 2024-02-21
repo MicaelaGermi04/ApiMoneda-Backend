@@ -2,6 +2,7 @@
 using ApiMoneda.Entities;
 using ApiMoneda.Models.Dto.ConversionDTO;
 using ApiMoneda.Services.Interface;
+using Microsoft.VisualBasic;
 
 namespace ApiMoneda.Services.Implementations
 {
@@ -13,13 +14,13 @@ namespace ApiMoneda.Services.Implementations
             _context = context;
         }
 
-        public List<Conversion> GetAll(int userId)
+        public List<Entities.Conversion> GetAll(int userId)
         {
             return _context.Conversions.Where(c => c.User.Id == userId).ToList();
         }
         public void CreateConversion(CreateConversionDTO dto)
         {
-            Conversion conversion = new Conversion()
+            Entities.Conversion conversion = new Entities.Conversion()
             {
                 Date = DateTime.Now,
                 UserId = dto.UserId,
@@ -32,7 +33,6 @@ namespace ApiMoneda.Services.Implementations
             _context.SaveChanges();
         }
 
-        //Contador de conversiones por mes 
         public int ConversionCounter(int userId)
         {
 

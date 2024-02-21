@@ -8,7 +8,7 @@ namespace ApiMoneda.Service.Interface
         void Create(CreateUserDTO dto);
         void Delete(int id);
         List<User> GetAll(); 
-        User? GetById(int id);
+        User? GetById(int id); 
         void Update(UpdateUserDto dto, int userId);
         bool CheckIfUserExists(int userId);
         User? ValidateUser(AuthenticationRequestBodyDTO authRequestBody);

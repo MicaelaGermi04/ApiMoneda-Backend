@@ -24,20 +24,19 @@ namespace ApiMoneda.Controller
         }
 
         [HttpPost("authenticate")] //Vamos a usar un POST ya que debemos enviar los datos para hacer el login
-        public IActionResult Authenticate(AuthenticationRequestBodyDTO authenticationRequestBody) //Enviamos como parámetro la clase que creamos arriba
+        public IActionResult Authenticate(AuthenticationRequestBodyDTO authenticationRequestBody)
         {
             //Paso 1: Validamos las credenciales
-            var user = _userService.ValidateUser(authenticationRequestBody); //Lo primero que hacemos es llamar a una función que valide los parámetros que enviamos.
+            var user = _userService.ValidateUser(authenticationRequestBody);
 
-            if (user is null) //Si el la función de arriba no devuelve nada es porque los datos son incorrectos, por lo que devolvemos un Unauthorized (un status code 401).
-                return Unauthorized();
+            if (user is null) //Si el la función de arriba no devuelve nada es porque los datos son incorrectos, por lo que devolvemos un Unauthorized.
+                return Unauthorized(); 
 
             //Paso 2: Crear el token
             var securityPassword = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_config["Authentication:SecretForKey"])); //Traemos la SecretKey del Json. agregar antes: using Microsoft.IdentityModel.Tokens;
 
             var credentials = new SigningCredentials(securityPassword, SecurityAlgorithms.HmacSha256);
 
-            //Los claims son datos en clave->valor que nos permite guardar data del usuario.
             var claimsForToken = new List<Claim>();
             claimsForToken.Add(new Claim("sub", user.Id.ToString())); //"sub" es una key estándar que significa unique user identifier, es decir, si mandamos el id del usuario por convención lo hacemos con la key "sub".
             claimsForToken.Add(new Claim("given_name", user.FirstName)); //Lo mismo para given_name y family_name, son las convenciones para nombre y apellido. Ustedes pueden usar lo que quieran, pero si alguien que no conoce la app
@@ -50,7 +49,7 @@ namespace ApiMoneda.Controller
               _config["Authentication:Audience"],
               claimsForToken,
               DateTime.UtcNow,
-              DateTime.UtcNow.AddHours(1),
+              DateTime.UtcNow.AddHours(2),
               credentials);
 
             var tokenToReturn = new JwtSecurityTokenHandler() //Pasamos el token a string

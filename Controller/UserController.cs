@@ -14,20 +14,23 @@ namespace ApiMoneda.Controller;
 public class UserController : ControllerBase
 {
     private readonly IUserService _userService;
-    public UserController(IUserService userService)
+    private readonly ISubscriptionService _subscriptionService;
+
+    public UserController(IUserService userService, ISubscriptionService subscriptionService)
     {
         _userService = userService;
+        _subscriptionService = subscriptionService;
     }
 
     [HttpGet]
-    public IActionResult GetAll()
+    public IActionResult GetAll()  
     {
         string role = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
         if (role == Role.Admin.ToString())
         {
-            return Ok(_userService.GetAll());
+            return Ok(_userService.GetAll()); 
         }
-        return Forbid();   //denegar el acceso a una operación restringida
+        return Forbid(); 
     }
 
     [HttpGet("{userId}")]
@@ -44,9 +47,10 @@ public class UserController : ControllerBase
         }
         return Ok(user);
     }
+
     [HttpPost]
     [AllowAnonymous]
-    public IActionResult CreateUser(CreateUserDTO dto)
+    public IActionResult CreateUser([FromBody] CreateUserDTO dto)
     {
         try
         {
@@ -54,13 +58,14 @@ public class UserController : ControllerBase
         }
         catch (Exception ex)
         {
-            return BadRequest(ex);
+            return BadRequest(ex.Message);
         }
         return Created("Created", dto);
     }
+
     [HttpPut("{userId}")]
     [AllowAnonymous]
-    public IActionResult UpdateUser([FromBody] UpdateUserDto dto, int userId) 
+    public IActionResult UpdateUser(int userId, [FromBody] UpdateUserDto dto) 
     {
         if(!_userService.CheckIfUserExists(userId))
         {
@@ -77,23 +82,25 @@ public class UserController : ControllerBase
         return NoContent();
     }
 
-    /// MIrar la parte del segundo if
     [HttpDelete("{userId}")]
     public IActionResult DeleteUser(int userId)
     {
         string role = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
         if(role == "Admin")
         {
-            User? user= _userService.GetById(userId); 
-            if (user is null)
+            if (!_userService.CheckIfUserExists(userId))
             {
-                return BadRequest("El usuario que intenta eliminar no existe");
+                return NotFound();
             }
-            if (user.Id == userId)
+            try
             {
                 _userService.Delete(userId);
             }
-            return NoContent();
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            return NoContent(); 
         }
         return Forbid();
     }
@@ -105,8 +112,12 @@ public class UserController : ControllerBase
         {
             return BadRequest();
         }
+        if(!_subscriptionService.CheckIfUserExists(subscriptionId))
+        {
+            return NotFound();
+        }
         _userService.UpdateUserSubscription(userId,subscriptionId); ;
-        return NoContent(); // la solicitud se ha procesado correctamente y no hay contenido adicional para devolver.
+        return NoContent(); 
     }
 }
 

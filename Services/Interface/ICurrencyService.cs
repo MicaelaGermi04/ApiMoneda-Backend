@@ -11,9 +11,5 @@ namespace ApiMoneda.Service.Interface
         void Update(CreateAndUpdateCurrencyDTO dto, int currencyId);
         void DeleteCurrency(int currencyId);
         bool CheckIfCurrencyExists(int currencyId);
-
-        List<Currency> GetFavouriteCurrencies(int userId);
-        void AddFavouriteCurrency(int userId, int currencyId);
-        void DeleteFavouriteCurrency(int userId, int currencyId);
     }
 }

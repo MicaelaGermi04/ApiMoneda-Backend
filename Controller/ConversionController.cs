@@ -29,14 +29,11 @@ namespace ApiMoneda.Controller
         [HttpGet]
         public IActionResult GetAll()
         {
-
-            //obtener el valor de un atributo NameIdentifier de un objeto Claims y convertirlo a un entero utilizando Int32.Parse().
             int userId = Int32.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
             return Ok(_conversionService.GetAll(userId));
         }
 
-        [HttpPost("convert")]  //Recibo los paramentros en el body de la request por Post
-        [AllowAnonymous]
+        [HttpPost("convert")]
         public IActionResult PerformAConversion([FromBody] ConversionRequestDTO requestbody)  
         {
             int userId = Int32.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
@@ -44,13 +41,13 @@ namespace ApiMoneda.Controller
             //Comparar Id de usuario ya autenticado con el Id de la request
             if(userId != requestbody.UserId)
             {
-                return Forbid("No autorizado"); //El usuario no tiene autorizacion
+                return Forbid("No autorizado");
             }
 
-           User user= _userService.GetById(userId);
+            User user= _userService.GetById(userId);
             int subscriptionId = user.SubscriptionId;
-            int conversionCounter = _conversionService.ConversionCounter(requestbody.UserId);
             Subscription userSubscription= _subscriptionService.GetSubscriptionById(subscriptionId);
+            int conversionCounter = _conversionService.ConversionCounter(requestbody.UserId);
 
 
             if(userSubscription == null)
@@ -74,8 +71,6 @@ namespace ApiMoneda.Controller
                 var createDto = new CreateConversionDTO
                 {
                     UserId = requestbody.UserId,
-                    //FirstCurrencyId = requestbody.FirstCurrencyId,
-                    //SecondCurrencyId = requestbody.SecondCurrencyId,
                     FirstCurrencyAmount = requestbody.FirstCurrencyAmount,
                     ConvertedAmount = convertedAmount,
                     FirstCurrencyName = firstCurrency.Name,
@@ -92,17 +87,16 @@ namespace ApiMoneda.Controller
                 }
                 return Ok(convertedAmount);
             }
-            return Forbid("El usuario supera la cantidad de conversiones"); /// 
+            return Forbid("El usuario supera la cantidad de conversiones"); 
         }
 
         [HttpGet("AmountConversions")]
-        [AllowAnonymous]
 
         public IActionResult GetAmountOfConversatios()
         {
             int userId = Int32.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
-            int conversationsAmount = _conversionService.ConversionCounter(userId);
-            return Ok(conversationsAmount);
+            int conversionsAmount = _conversionService.ConversionCounter(userId);
+            return Ok(conversionsAmount);
         }
     }
 }

@@ -15,9 +15,9 @@ namespace ApiMoneda
     {
         public static void Main(string[] args)
         {
+            //crea un nuevo constructor de la aplicación web
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
             builder.Services.AddControllers().AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
@@ -26,13 +26,14 @@ namespace ApiMoneda
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen( setupAction =>
             {
-                setupAction.AddSecurityDefinition("ConversorApiBearerAuth", new OpenApiSecurityScheme() //Esto va a permitir usar swagger con el token.
+                //Esto va a permitir usar swagger con el token.
+                setupAction.AddSecurityDefinition("ConversorApiBearerAuth", new OpenApiSecurityScheme() 
                 {
                     Type = SecuritySchemeType.Http,
                     Scheme = "Bearer",
                     Description = "Acá pegar el token generado al loguearse."
                 });
-
+                //asegura que Swagger requerirá el token de autenticación para acceder a los endpoints de la API.
                 setupAction.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {
                     {
@@ -49,10 +50,11 @@ namespace ApiMoneda
 
             });
 
+            //Agrega el contexto de base de datos a los servicios de la aplicación.
             builder.Services.AddDbContext<ConversorContext>(dbContextOptions => dbContextOptions.UseSqlite(
             builder.Configuration["ConnectionStrings:ConversorAPIDBConnectionString"]));
 
-            builder.Services.AddAuthentication("Bearer") //"Bearer" es el tipo de auntenticación que tenemos que elegir después en PostMan para pasarle el token
+            builder.Services.AddAuthentication("Bearer") //Esto indica que se utilizará la autenticación basada en tokens de tipo "Bearer".
                 .AddJwtBearer(options => //Acá definimos la configuración de la autenticación. le decimos qué cosas queremos comprobar. La fecha de expiración se valida por defecto.
                 {
                     options.TokenValidationParameters = new()
@@ -66,7 +68,7 @@ namespace ApiMoneda
                     };
                 }
             );
-
+            
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<ISubscriptionService, SubscriptionService>();
             builder.Services.AddScoped<ICurrencyService, CurrencyService>();
@@ -80,7 +82,7 @@ namespace ApiMoneda
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
+            //permite que el servidor indique que cualquier dominio o puerto diferente al suyo puede cargar recursos.
             app.UseCors(
                   options => options.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
 

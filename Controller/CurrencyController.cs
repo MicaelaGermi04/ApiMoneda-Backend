@@ -21,7 +21,6 @@ namespace ApiMoneda.Controller
         }
 
         [HttpGet]
-        [AllowAnonymous]
         public IActionResult GetAll() 
         {
             return Ok(_currencyService.GetAll());
@@ -39,7 +38,7 @@ namespace ApiMoneda.Controller
                 }
                 catch (Exception ex)
                 {
-                    return BadRequest(ex);
+                    return BadRequest(ex); 
                 }
                 return Created("Created", dto);
             }
@@ -49,7 +48,7 @@ namespace ApiMoneda.Controller
         [HttpGet("{currencyId}")]
         public IActionResult GetById(int currencyId)
         {
-            if(currencyId == 0) // No chequeo si es nulo porque el resultado siempre seria false, un valor 'int' nunca es igual a 'NULL'
+            if(currencyId == 0) 
             {
                 return BadRequest();
             }
@@ -60,14 +59,7 @@ namespace ApiMoneda.Controller
                 return NotFound();
             }
 
-            var currencydto = new CurrencyDTO
-            {
-                Id = currency.Id,
-                Name = currency.Name,
-                isOcode = currency.ISOcode,
-                Value = currency.Value,
-            };
-            return Ok(currencydto);
+            return Ok(currency);
         }
 
         [HttpPut("{currencyId}")]
@@ -88,9 +80,9 @@ namespace ApiMoneda.Controller
                 {
                     return BadRequest(ex);
                 }
-                return NoContent(); // 204 la solicitud ha sido aceptada y procesada correctamente, pero no hay datos adicionales para devolver en la respuesta
+                return NoContent(); // 204 
             }
-            return Forbid(); // No autorizado
+            return Forbid(); // 403
         }
 
         [HttpDelete("{currencyId}")] 
@@ -99,13 +91,18 @@ namespace ApiMoneda.Controller
             string role = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
             if(role == Role.Admin.ToString())
             {
-                Currency? currency = _currencyService.GetById(currencyId);
-                if (currency is null)
+                if (!_currencyService.CheckIfCurrencyExists(currencyId))
                 {
                     return NotFound();
                 }
-                _currencyService.DeleteCurrency(currencyId);
-                
+                try
+                {
+                   _currencyService.DeleteCurrency(currencyId);
+                }
+                catch(Exception ex)
+                {
+                   return BadRequest(ex);
+                }
                 return NoContent();
             }
             return Forbid();

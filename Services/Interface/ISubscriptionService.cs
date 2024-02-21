@@ -8,6 +8,7 @@ namespace ApiMoneda.Service.Interface
         List<Subscription> GetAll();
         Subscription? GetSubscriptionById(int id);
         int GetSubscriptionAmountOfConversions(int subscriptionId);
+        bool CheckIfUserExists(int subscriptionId);
 
     }
 

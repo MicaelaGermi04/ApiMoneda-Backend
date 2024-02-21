@@ -15,7 +15,7 @@ namespace ApiMoneda.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
-            // RELACIÓN MUCHOS A MUCHOS ENTRE USER Y CURRENCY DE NAVEGACION UNIDIRECCIONAL SIN USAR ENTIDAD INTERMEDIA CON EF CORE
+            // RELACIÓN MUCHOS A MUCHOS ENTRE USER Y CURRENCY UTILIZANDO UNA TABLA DE UNIÒN
             modelBuilder.Entity<User>()
                 .HasMany(u => u.Currencies)
                 .WithMany()
@@ -24,8 +24,8 @@ namespace ApiMoneda.Data
 
             // RELACION 1, N SUSCRIPCION/USUARIO
             modelBuilder.Entity<Subscription>()
-                .HasMany(s => s.Users)
-                .WithOne(u => u.Subscription)
+                .HasMany(s => s.Users) 
+                .WithOne(u => u.Subscription)  
                 .HasForeignKey(u => u.SubscriptionId);
 
             // RELACION 1, N USUARIO/CONVERSION

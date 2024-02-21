@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ApiMoneda.Migrations
 {
     [DbContext(typeof(ConversorContext))]
-    [Migration("20240209030417_Final")]
-    partial class Final
+    [Migration("20240221221525_final")]
+    partial class final
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
